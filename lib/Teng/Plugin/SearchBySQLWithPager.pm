@@ -10,15 +10,18 @@ our @EXPORT = qw/search_by_sql_with_pager/;
 sub search_by_sql_with_pager {
     my ($self, $sql) = splice @_, 0, 2;
     my $opt = pop;
+    my $binds = shift || [ ];
 
     my ($page, $rows) = map {
         Carp::croak("missing mandatory parameter: $_") unless exists $opt->{$_};
+        Carp::croak("$_ must be an integer") if $opt->{$_} =~ tr/0-9//c;
         $opt->{$_};
     } qw/page rows/;
 
     $sql =~ s/ ; \s* \z//xms;
-    $sql .= sprintf ' LIMIT %d OFFSET %d', $rows + 1, $rows*($page-1);
-    my $ret = [ $self->search_by_sql($sql, @_) ];
+    $sql .= ' LIMIT ? OFFSET ?';
+    push @$binds, $rows + 1, $rows*($page-1);
+    my $ret = [ $self->search_by_sql($sql, $binds, @_) ];
 
     my $has_next = ( $rows + 1 == scalar(@$ret) ) ? 1 : 0;
     if ($has_next) { pop @$ret }

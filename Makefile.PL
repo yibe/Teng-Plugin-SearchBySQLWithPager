@@ -17,7 +17,7 @@ build_requires 'Test::More' => '0.96';
 test_requires 'DBD::SQLite';
 
 tests 't/*.t';
-author_tests 'xt';
+author_tests 'xt', 'xt/mysql';
 
 auto_set_repository;
 WriteAll;
