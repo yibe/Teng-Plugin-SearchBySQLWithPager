@@ -56,6 +56,16 @@ sub prev_page {
     $self->current_page > 1 ? $self->current_page - 1 : undef;
 }
 
+sub first {
+    my $self = shift;
+    $self->entries_on_this_page ? $self->entries_per_page * ($self->current_page - 1) + 1 : undef;
+}
+
+sub last {
+    my $self = shift;
+    $self->entries_on_this_page ? $self->first + $self->entries_on_this_page - 1 : undef;
+}
+
 1;
 __END__
 

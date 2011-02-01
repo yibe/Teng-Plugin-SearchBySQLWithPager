@@ -43,22 +43,26 @@ subtest 'simple' => sub {
     is $pager->next_page, 2, 'next_page';
     ok $pager->has_next, 'has_next';
     is $pager->prev_page, undef, 'prev_page';
+    is $pager->first, 1, 'first';
+    is $pager->last, 3, 'last';
 };
 
 subtest 'last' => sub {
     my ($rows, $pager) = $db->search_by_sql_with_pager(
-        "SELECT id, name FROM $table_name WHERE id > ?",
-        [ 0 ],
+        "SELECT id, name FROM $table_name WHERE id >= ?",
+        [ 4 ],
         $table_name,
-        { rows => 3, page => 11 },
+        { rows => 3, page => 10 },
     );
     is join(',', map { $_->id } @$rows), '31,32';
     is $pager->entries_per_page(), 3, 'entries_per_page';
     is $pager->entries_on_this_page(), 2, 'entries_on_this_page';
-    is $pager->current_page(), 11, 'current_page';
+    is $pager->current_page(), 10, 'current_page';
     is $pager->next_page, undef, 'next_page';
     ok !$pager->has_next, 'has_next';
-    is $pager->prev_page, 10, 'prev_page';
+    is $pager->prev_page, 9, 'prev_page';
+    is $pager->first, 28, 'first';
+    is $pager->last, 29, 'last';
 };
 
 done_testing;
