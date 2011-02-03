@@ -10,7 +10,7 @@ our @EXPORT = qw/search_by_sql_with_pager/;
 sub search_by_sql_with_pager {
     my ($self, $sql) = splice @_, 0, 2;
     my $opt = pop;
-    my $binds = shift || [ ];
+    my @binds = @{ shift || [ ] };
 
     my ($page, $rows) = map {
         Carp::croak("missing mandatory parameter: $_") unless exists $opt->{$_};
@@ -20,8 +20,8 @@ sub search_by_sql_with_pager {
 
     $sql =~ s/ ; \s* \z//xms;
     $sql .= ' LIMIT ? OFFSET ?';
-    push @$binds, $rows + 1, $rows*($page-1);
-    my $ret = [ $self->search_by_sql($sql, $binds, @_) ];
+    push @binds, $rows + 1, $rows*($page-1);
+    my $ret = [ $self->search_by_sql($sql, \@binds, @_) ];
 
     my $has_next = ( $rows + 1 == scalar(@$ret) ) ? 1 : 0;
     if ($has_next) { pop @$ret }
