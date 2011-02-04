@@ -8,10 +8,10 @@ all_from 'lib/Teng/Plugin/SearchBySQLWithPager.pm';
 readme_pod_from 'lib/Teng/Plugin/SearchBySQLWithPager.pm';
 
 requires 'Carp';
-requires 'Class::Accessor::Lite' => '0.05';
 requires 'DBI';
 requires 'Teng';
 requires 'parent';
+requires 'Data::Page::NoTotalEntries' => '0.02';
 
 build_requires 'Test::More' => '0.96';
 test_requires 'DBD::SQLite';

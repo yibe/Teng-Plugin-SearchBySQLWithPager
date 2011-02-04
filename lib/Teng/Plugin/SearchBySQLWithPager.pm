@@ -4,6 +4,7 @@ use strict;
 use warnings;
 our $VERSION = '0.00_01';
 use Carp ();
+use Data::Page::NoTotalEntries;
 
 our @EXPORT = qw/search_by_sql_with_pager/;
 
@@ -26,7 +27,7 @@ sub search_by_sql_with_pager {
     my $has_next = ( $rows + 1 == scalar(@$ret) ) ? 1 : 0;
     if ($has_next) { pop @$ret }
 
-    my $pager = Teng::Plugin::SearchBySQLWithPager::Page->new(
+    my $pager = Data::Page::NoTotalEntries->new(
         entries_per_page     => $rows,
         current_page         => $page,
         has_next             => $has_next,
@@ -34,39 +35,6 @@ sub search_by_sql_with_pager {
     );
 
     return ($ret, $pager);
-}
-
-package Teng::Plugin::SearchBySQLWithPager::Page;
-# copied from Teng::Plugin::Pager
-use Class::Accessor::Lite (
-    ro => [qw/entries_per_page current_page has_next entries_on_this_page/],
-);
-
-sub new {
-    my $class = shift;
-    my %args = @_==1 ? %{$_[0]} : @_;
-    bless {%args}, $class;
-}
-
-sub next_page {
-    my $self = shift;
-    $self->has_next ? $self->current_page + 1 : undef;
-}
-
-sub previous_page { shift->prev_page(@_) }
-sub prev_page {
-    my $self = shift;
-    $self->current_page > 1 ? $self->current_page - 1 : undef;
-}
-
-sub first {
-    my $self = shift;
-    $self->entries_on_this_page ? $self->entries_per_page * ($self->current_page - 1) + 1 : undef;
-}
-
-sub last {
-    my $self = shift;
-    $self->entries_on_this_page ? $self->first + $self->entries_on_this_page - 1 : undef;
 }
 
 1;
