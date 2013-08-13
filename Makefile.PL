@@ -9,7 +9,7 @@ readme_pod_from 'lib/Teng/Plugin/SearchBySQLWithPager.pm';
 
 requires 'Carp';
 requires 'DBI';
-requires 'Teng';
+requires 'Teng' => '0.15';
 requires 'parent';
 requires 'Data::Page::NoTotalEntries' => '0.02';
 

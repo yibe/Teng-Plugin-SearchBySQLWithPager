@@ -28,8 +28,7 @@ $dbh->do(qq{
     use parent 'Teng';
     __PACKAGE__->load_plugin('SearchBySQLWithPager');
 }
-my $schema = Teng::Schema::Loader->load( dbh => $dbh, namespace => 'Mock::Basic' );
-my $db = Mock::Basic->new( schema => $schema, dbh => $dbh );
+my $db = Teng::Schema::Loader->load( dbh => $dbh, namespace => 'Mock::Basic' );
 
 for my $i (1..32) {
     $db->insert($table_name => { id => $i, name => "name_$i" });
